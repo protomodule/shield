@@ -1,0 +1,32 @@
+{
+  "name": "@protomodule/shield",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/protomodule/shield.git"
+  },
+  "description": "CLI tool for examining Javascript projects for security vulnerabilities in dependencies.",
+  "keywords": [
+    "javascript",
+    "npm",
+    "yarn",
+    "dependency",
+    "audit",
+    "security"
+  ],
+  "scripts": {
+    "shield": "./node_modules/.bin/ts-node ./src/main.ts",
+    "watch": "./node_modules/.bin/nodemon ./src/main.ts"
+  },
+  "author": "Lukas Korl <hello@lukaskorl.com> (https://lukaskorl.com/)",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/node": "^18.6.5"
+  },
+  "dependencies": {
+    "commander": "^9.4.0",
+    "nodemon": "^2.0.19",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.4"
+  }
+}
