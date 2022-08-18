@@ -2,6 +2,7 @@ import { Report } from "../report"
 import Table from "cli-table"
 import { log } from "../../utils/log"
 import { icon } from "../../utils/severity"
+import { debug } from "console"
 
 export const table = async (report: Report) => {
   if (!report.vulnerabilities.length) {
@@ -10,7 +11,7 @@ export const table = async (report: Report) => {
   }
 
   const printTable = new Table({
-    head: [ "", "Severity", "Module", "Installed", "Fixed version", "Vulnerability" ]
+    head: [ "", "Severity", "Module", "Installed", "Affected  ", "Vulnerability" ]
   })
 
   report.vulnerabilities.forEach(vulnerability => printTable.push([
@@ -18,7 +19,7 @@ export const table = async (report: Report) => {
     vulnerability.severity,
     vulnerability.module_name,
     vulnerability.version,
-    vulnerability.patched_versions,
+    vulnerability.vulnerable_versions || "",
     vulnerability.title
   ]))
 

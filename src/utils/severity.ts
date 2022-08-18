@@ -19,3 +19,7 @@ export const priority = (severity: string): number => {
     default:         return 0
   }
 }
+
+export const byPriority = function(a: { priority: number }, b: { priority: number }) {
+  return (a.priority > b.priority) ? -1 : (a.priority < b.priority) ? 1 : 0
+}

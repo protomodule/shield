@@ -1,15 +1,12 @@
 import __ from "lodash"
-import util from "util"
 import fs from "fs/promises"
 import { Auditor } from "./auditor"
 import { Report, report } from "../report"
 import jsonata from "jsonata"
 import dayjs from "dayjs"
 import path from "path"
-import { debug, log } from "../../utils/log"
 import { priority } from "../../utils/severity"
-
-const exec = util.promisify(require("child_process").exec)
+import { exec } from "../../utils/exec"
 
 const interpretAudit = (stdout: string): Report => {
   return __.uniqBy(

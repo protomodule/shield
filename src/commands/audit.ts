@@ -6,6 +6,7 @@ import path from "path"
 import { executor } from "../services/executor"
 import { yarn } from "../services/auditors/yarn"
 import { table } from "../services/printers/table"
+import { npm } from "../services/auditors/npm"
 
 export const audit = (program: Command) => {
   program
@@ -15,6 +16,7 @@ export const audit = (program: Command) => {
     .action(async (args) => {
       const exec = executor(args.path)
       exec.register(yarn)
+      exec.register(npm)
       const reports = await exec(args.auditor)
 
       reports.forEach(report => {
