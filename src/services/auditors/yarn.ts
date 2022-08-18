@@ -1,3 +1,4 @@
+import __ from "lodash"
 import util from "util"
 import fs from "fs/promises"
 import { Auditor } from "./auditor"
@@ -5,13 +6,25 @@ import { Report, report } from "../report"
 import jsonata from "jsonata"
 import dayjs from "dayjs"
 import path from "path"
+import { debug, log } from "../../utils/log"
+import { priority } from "../../utils/severity"
 
 const exec = util.promisify(require("child_process").exec)
 
 const interpretAudit = (stdout: string): Report => {
-  return stdout.split("\n")
-    .filter(line => `${line}`.length)
-    .map(line => JSON.parse(line))
+  return __.uniqBy(
+      stdout.split("\n")
+        .filter(line => `${line}`.length)
+        .map(line => JSON.parse(line))
+        .map(advisory => ({
+          ...advisory,
+          priority: priority(jsonata("data.advisory.severity").evaluate(advisory))
+        }))
+        .sort(function(a, b) {
+          return (a.priority > b.priority) ? -1 : (a.priority < b.priority) ? 1 : 0
+        }),
+      "data.advisory.id"
+    )
     .reduce((acc: Report, output): Report => {
       switch (output.type) {
         case "auditAdvisory":
@@ -22,7 +35,7 @@ const interpretAudit = (stdout: string): Report => {
               ...acc.vulnerabilities,
               {
                 module_name: jsonata("data.advisory.module_name").evaluate(output),
-                version: [jsonata("data.advisory.findings.version").evaluate(output)].flat().join(", "),
+                version: [...new Set([jsonata("data.advisory.findings.version").evaluate(output)].flat())].join(", "),
                 severity: jsonata("data.advisory.severity").evaluate(output),
                 title: jsonata("data.advisory.title").evaluate(output),
                 path: jsonata("data.resolution.path").evaluate(output),
