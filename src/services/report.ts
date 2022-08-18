@@ -32,11 +32,10 @@ export interface Report {
   summary: Summary
 }
 
-export const report = (report?: Report): Report => {
+export const summary = (summary?: Summary): Summary => {
   return {
-    auditor: "none",
-    vulnerabilities: [],
-    summary: {
+    ...summary,
+    ...{
       count: {
         info: 0,
         low: 0,
@@ -45,5 +44,13 @@ export const report = (report?: Report): Report => {
         critical: 0
       }
     }
+  }
+}
+
+export const report = (report?: Report): Report => {
+  return {
+    auditor: "none",
+    vulnerabilities: [],
+    summary: summary(report?.summary)
   }
 }

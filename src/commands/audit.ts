@@ -13,6 +13,8 @@ export const audit = (program: Command) => {
     .action(async (args) => {
       const exec = executor(args.path)
       exec.register(yarn)
-      exec(args.auditor)
+      const reports = await exec(args.auditor)
+
+      debug(reports)
     })
 }

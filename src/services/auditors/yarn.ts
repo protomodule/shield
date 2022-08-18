@@ -1,8 +1,6 @@
 import util from "util"
 import fs from "fs/promises"
-import { debug } from "../../utils/log"
 import { Auditor } from "./auditor"
-import { exec as execWithCallback } from "child_process"
 import { Report, report } from "../report"
 import jsonata from "jsonata"
 import dayjs from "dayjs"
@@ -38,9 +36,9 @@ const interpretAudit = (stdout: string): Report => {
             ]
           }
         default:
-          return report()
+          return acc
       }
-    })
+    }, report())
 }
 
 export const yarn = (cwd: string) => {
@@ -49,8 +47,8 @@ export const yarn = (cwd: string) => {
       const result = await exec("yarn audit --json", { cwd })
       return interpretAudit(result.stdout)
     }
-    catch (error: any) {
-      return interpretAudit(error.stdout)
+    catch (err: any) {
+      return interpretAudit(err.stdout)
     }
   }
 
