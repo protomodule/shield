@@ -17,16 +17,21 @@
     "audit",
     "security"
   ],
+  "bin": {
+    "protoshield": "./dist/main.js"
+  },
   "scripts": {
     "shield": "./node_modules/.bin/ts-node ./src/main.ts",
-    "watch": "./node_modules/.bin/nodemon ./src/main.ts"
+    "watch": "./node_modules/.bin/nodemon ./src/main.ts",
+    "build": "npx tsc -p tsconfig.json"
   },
   "author": "Lukas Korl <hello@lukaskorl.com> (https://lukaskorl.com/)",
   "license": "Apache-2.0",
   "devDependencies": {
     "@types/cli-table": "^0.3.0",
     "@types/lodash": "^4.14.183",
-    "@types/node": "^18.6.5"
+    "@types/node": "^18.6.5",
+    "tsc": "^2.0.4"
   },
   "dependencies": {
     "chalk": "^5.0.1",

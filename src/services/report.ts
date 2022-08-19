@@ -1,4 +1,5 @@
 import { type Dayjs } from "dayjs"
+import { priority } from "../utils/severity"
 
 export interface Summary {
   count: {
@@ -53,4 +54,11 @@ export const report = (report?: Report): Report => {
     vulnerabilities: [],
     summary: summary(report?.summary)
   }
+}
+
+export const exitCode = (reports: Report[]): number => {
+  return Math.ceil(reports
+    .map(report => report.vulnerabilities.map(vulnerability => priority(vulnerability.severity)))
+    .flat()
+    .reduce((acc, prio) => Math.max(acc, prio), 0) / 10)
 }

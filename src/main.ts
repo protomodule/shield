@@ -1,4 +1,4 @@
-#! /usr/bin/env ./node_modules/.bin/ts-node
+#!/usr/bin/env node
 
 import { program } from "commander"
 import { audit } from "./commands/audit"
