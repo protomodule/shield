@@ -1,9 +1,10 @@
 import fs from "fs/promises"
 import path from "path"
+import ora from "ora"
 import { Report, report, Vulnerability } from "../report"
 import { Auditor } from "./auditor"
 import { exec, ExecResult, NORESULT } from "../../utils/exec"
-import { debug } from "../../utils/log"
+import { debug, log } from "../../utils/log"
 import jsonata from "jsonata"
 import { byPriority, priority } from "../../utils/severity"
 
@@ -57,13 +58,19 @@ const interpretAudit = async (stdout: string, cwd: string): Promise<Report> => {
 
 export const npm = (cwd: string) => {
   const auditor = <Auditor> async function () {
+    const spinner = ora(`  Performing ${auditor.identifier} audit`).start()
     try {
       const result = await exec("npm", [ "audit", "--json" ], { cwd })
+      spinner.succeed("  Audit successful")
       return interpretAudit(result.stdout?.join() || NORESULT, cwd)
     }
     catch (err: any) {
       const error = err as ExecResult
-      if (error.stderr?.length) throw new Error(error.stderr?.join())
+      if (error.stderr?.length) {
+        spinner.fail("  An error occured during audit")
+        throw new Error(error.stderr?.join())
+      }
+      spinner.succeed("  Audit finished")
       return interpretAudit(error.stdout?.join() || NORESULT, cwd)
     }
   }

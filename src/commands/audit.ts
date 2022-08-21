@@ -21,6 +21,7 @@ export const audit = (program: Command) => {
       exec.register(npm)
       const reports = await exec(args.auditor)
 
+      log(`📄  Found ${reports.length} report(s)\n\n`)
       reports.forEach(report => {
         log(__.capitalize(report.auditor))
         table(report)

@@ -1,5 +1,5 @@
 import { cwd } from "process"
-import { debug } from "../utils/log"
+import { debug, log } from "../utils/log"
 import { Auditor } from "./auditors/auditor"
 import { Report, summary } from "./report"
 
@@ -11,6 +11,7 @@ interface ExecutorFunction {
 }
 
 const summarizeReport = (auditor: string, report: Report): Report => {
+  log(`🏁  Summarizing report for ${auditor}`)
   return {
     ...report,
     auditor,
@@ -34,6 +35,7 @@ export const executor = (path: string = cwd()) => {
   const executor = <ExecutorFunction> async function (auditor?: string): Promise<Report[]> {
     // Use auditor given as CLI argument
     if (auditor && auditors[auditor]) {
+      log(`📌  Auditor has been pinned to ${auditor}`)
       return [
         summarizeReport(auditor, await auditors[auditor]())
       ]

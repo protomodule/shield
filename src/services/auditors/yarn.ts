@@ -7,6 +7,7 @@ import dayjs from "dayjs"
 import path from "path"
 import { priority } from "../../utils/severity"
 import { exec, ExecResult, NORESULT } from "../../utils/exec"
+import ora = require("ora")
 
 const interpretAudit = (stdout: string): Report => {
   return __.uniqBy(
@@ -54,13 +55,19 @@ const interpretAudit = (stdout: string): Report => {
 
 export const yarn = (cwd: string) => {
   const auditor = <Auditor> async function () {
+    const spinner = ora(`  Performing ${auditor.identifier} audit`).start()
     try {
       const result = await exec("yarn", [ "audit", "--json" ], { cwd })
+      spinner.succeed("  Audit successful")
       return interpretAudit(result.stdout?.join() || NORESULT)
     }
     catch (err: any) {
       const error = err as ExecResult
-      if (error.stderr?.length) throw new Error(error.stderr?.join())
+      if (error.stderr?.length) {
+        spinner.fail("  An error occured during audit")
+        throw new Error(error.stderr?.join())
+      }
+      spinner.succeed("  Audit finished")
       return interpretAudit(error.stdout?.join() || NORESULT)
     }
   }
