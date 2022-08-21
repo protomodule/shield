@@ -2,13 +2,17 @@ import fs from "fs/promises"
 import path from "path"
 import { Report, report, Vulnerability } from "../report"
 import { Auditor } from "./auditor"
-import { exec } from "../../utils/exec"
-import { debug } from "../../utils/log"
+import { ExecResult, exec, NORESULT } from "../../utils/exec"
+import { debug, log } from "../../utils/log"
 import jsonata from "jsonata"
 import { byPriority, priority } from "../../utils/severity"
 import dayjs from "dayjs"
 
 const interpretAudit = async (stdout: string): Promise<Report> => {
+  
+  log(stdout)
+  debug(stdout.length)
+
   const result = JSON.parse(stdout)
   const error = jsonata("error").evaluate(result)
 
@@ -24,6 +28,7 @@ const interpretAudit = async (stdout: string): Promise<Report> => {
       .map(async (vulnerability: any): Promise<Vulnerability> => {
         const created = jsonata("disclosureTime").evaluate(vulnerability)
         return {
+          identifier: [...new Set([jsonata("identifiers.CVE").evaluate(vulnerability)].flat())].join(", "),
           module_name: jsonata("packageName").evaluate(vulnerability),
           version: jsonata("version").evaluate(vulnerability),
           severity: jsonata("severity").evaluate(vulnerability),
@@ -52,12 +57,13 @@ const interpretAudit = async (stdout: string): Promise<Report> => {
 export const snyk = (image: string) => {
   const auditor = <Auditor> async function () {
     try {
-      const result = await exec(`docker scan --json --group-issues ${image}`)
-      return interpretAudit(result.stdout)
+      const result = await exec("docker", ["scan", "--json", "--group-issues",  `${image}`])
+      return interpretAudit(result.stdout?.join() || NORESULT)
     }
-    catch (err: any) {
-      if (`${err.stderr}`.length) throw new Error(err.stderr)
-      return interpretAudit(err.stdout)
+    catch (err) {
+      const error = err as ExecResult
+      if (error.stderr?.length) throw new Error(error.stderr?.join())
+      return interpretAudit(error.stderr?.join() || NORESULT)
     }
   }
 

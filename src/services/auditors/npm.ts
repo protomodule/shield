@@ -2,7 +2,7 @@ import fs from "fs/promises"
 import path from "path"
 import { Report, report, Vulnerability } from "../report"
 import { Auditor } from "./auditor"
-import { exec } from "../../utils/exec"
+import { exec, ExecResult, NORESULT } from "../../utils/exec"
 import { debug } from "../../utils/log"
 import jsonata from "jsonata"
 import { byPriority, priority } from "../../utils/severity"
@@ -30,6 +30,7 @@ const interpretAudit = async (stdout: string, cwd: string): Promise<Report> => {
       .sort(byPriority)
       .map(async (vulnerability: any): Promise<Vulnerability> => {
         return {
+          identifier: [...new Set([jsonata("via.url").evaluate(vulnerability)].flat().map(url => url.split("/").pop()))].join(", "),
           module_name: jsonata("name").evaluate(vulnerability),
           // version: (await exec(`npm view ${jsonata("name").evaluate(vulnerability)} version`, { cwd })).stdout.trim(),
           version: await installedVersion(cwd, jsonata("name").evaluate(vulnerability)) || "",
@@ -57,12 +58,13 @@ const interpretAudit = async (stdout: string, cwd: string): Promise<Report> => {
 export const npm = (cwd: string) => {
   const auditor = <Auditor> async function () {
     try {
-      const result = await exec("npm audit --json", { cwd })
-      return interpretAudit(result.stdout, cwd)
+      const result = await exec("npm", [ "audit", "--json" ], { cwd })
+      return interpretAudit(result.stdout?.join() || NORESULT, cwd)
     }
     catch (err: any) {
-      if (`${err.stderr}`.length) throw new Error(err.stderr)
-      return interpretAudit(err.stdout, cwd)
+      const error = err as ExecResult
+      if (error.stderr?.length) throw new Error(error.stderr?.join())
+      return interpretAudit(error.stdout?.join() || NORESULT, cwd)
     }
   }
 

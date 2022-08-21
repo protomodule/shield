@@ -14,7 +14,7 @@ export const audit = (program: Command) => {
     .command("audit")
     .requiredOption("-p, --path <path to source code>")
     .option("-a, --auditor <name of auditor> ")
-    .option("-e, --exit", "End process with exit matching highes detected severity")
+    .option("-e, --exit", "End process with exit matching highest detected severity")
     .action(async (args) => {
       const exec = executor(args.path)
       exec.register(yarn)

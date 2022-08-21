@@ -11,7 +11,7 @@ export const table = async (report: Report) => {
   }
 
   const printTable = new Table({
-    head: [ "", "Severity", "Module", "Installed", "Affected  ", "Vulnerability" ]
+    head: [ "", "Severity", "Module", "Installed", "Affected", "Fixed", "Vulnerability" ]
   })
 
   report.vulnerabilities.forEach(vulnerability => printTable.push([
@@ -20,6 +20,7 @@ export const table = async (report: Report) => {
     vulnerability.module_name,
     vulnerability.version,
     vulnerability.vulnerable_versions || "",
+    vulnerability.patched_versions || "",
     vulnerability.title
   ]))
 

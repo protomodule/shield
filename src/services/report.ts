@@ -12,6 +12,7 @@ export interface Summary {
 }
 
 export interface Vulnerability {
+  identifier: string
   module_name: string
   version: string
   severity: string

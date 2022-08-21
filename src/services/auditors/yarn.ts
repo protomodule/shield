@@ -6,7 +6,7 @@ import jsonata from "jsonata"
 import dayjs from "dayjs"
 import path from "path"
 import { priority } from "../../utils/severity"
-import { exec } from "../../utils/exec"
+import { exec, ExecResult, NORESULT } from "../../utils/exec"
 
 const interpretAudit = (stdout: string): Report => {
   return __.uniqBy(
@@ -31,6 +31,7 @@ const interpretAudit = (stdout: string): Report => {
             vulnerabilities: [
               ...acc.vulnerabilities,
               {
+                identifier: [...new Set([jsonata("data.advisory.cves").evaluate(output)].flat())].join(", "),
                 module_name: jsonata("data.advisory.module_name").evaluate(output),
                 version: [...new Set([jsonata("data.advisory.findings.version").evaluate(output)].flat())].join(", "),
                 severity: jsonata("data.advisory.severity").evaluate(output),
@@ -54,11 +55,13 @@ const interpretAudit = (stdout: string): Report => {
 export const yarn = (cwd: string) => {
   const auditor = <Auditor> async function () {
     try {
-      const result = await exec("yarn audit --json", { cwd })
-      return interpretAudit(result.stdout)
+      const result = await exec("yarn", [ "audit", "--json" ], { cwd })
+      return interpretAudit(result.stdout?.join() || NORESULT)
     }
     catch (err: any) {
-      return interpretAudit(err.stdout)
+      const error = err as ExecResult
+      if (error.stderr?.length) throw new Error(error.stderr?.join())
+      return interpretAudit(error.stdout?.join() || NORESULT)
     }
   }
 

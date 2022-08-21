@@ -1,4 +1,11 @@
 {
+  "ts-node": {
+    "files": true
+  },
+  "files": [
+    "src/main.ts",
+    "src/global.d.ts"
+  ],
   "extends": "@tsconfig/node16/tsconfig.json",
   "include": ["src"],
   "exclude": ["node_modules"],
