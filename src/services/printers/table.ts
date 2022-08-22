@@ -2,8 +2,9 @@ import { Report } from "../report"
 import Table from "cli-table"
 import { out } from "../../utils/log"
 import { icon } from "../../utils/severity"
+import { Printer } from "./printer"
 
-export const table = async (report: Report) => {
+export const table = <Printer> async function (report: Report): Promise<void> {
   if (!report.vulnerabilities.length) {
     out("No vulnerabilities found\n\n")
     return
@@ -27,3 +28,5 @@ export const table = async (report: Report) => {
   out(printTable.toString())
   out("\n\n")
 }
+
+table.identifier = "table"

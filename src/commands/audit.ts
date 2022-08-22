@@ -1,21 +1,22 @@
 import __ from "lodash"
 import { Command } from "commander"
-import { log, out } from "../utils/log"
+import { log } from "../utils/log"
 import { executor } from "../services/executor"
 import { yarn } from "../services/auditors/yarn"
-import { table } from "../services/printers/table"
 import { npm } from "../services/auditors/npm"
 import { exitCode } from "../services/report"
 import { filterSeverity } from "../utils/severity"
 import chalk from "chalk"
+import { GenericPrinter } from "../services/printers/printer"
 
-export const audit = (program: Command) => {
+export const audit = (program: Command, print: GenericPrinter) => {
   program
     .command("audit")
     .requiredOption("-p, --path <path to source code>", "Path to JavaScript project", ".")
     .option("-a, --auditor <name of auditor> ")
     .option("-e, --exit", "End process with exit matching highest detected severity")
     .option("-s, --severity <severity>", "Specify minimum severity to include in report")
+    .option("-o, --output <format>", "Specify format of output (table, json is supported)")
     .action(async (args) => {
       const exec = executor(args.path)
       exec.register(yarn)
@@ -24,8 +25,8 @@ export const audit = (program: Command) => {
 
       log(`📄  Found ${reports.length} report(s)\n\n`)
       reports.forEach(report => {
-        out(chalk.bgBlue.white.bold(`   ${__.capitalize(report.auditor)}   `))
-        table(report)
+        log(chalk.bgBlue.white.bold(`   ${__.capitalize(report.auditor)}   `))
+        print(report, args.output)
       })
 
       if (args.exit) process.exit(exitCode(reports))
