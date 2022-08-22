@@ -7,7 +7,7 @@ import dayjs from "dayjs"
 import path from "path"
 import { priority } from "../../utils/severity"
 import { exec, ExecResult, NORESULT } from "../../utils/exec"
-import ora = require("ora")
+import ora from "ora"
 
 const interpretAudit = (stdout: string): Report => {
   return __.uniqBy(

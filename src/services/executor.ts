@@ -42,10 +42,16 @@ export const executor = (path: string = cwd()) => {
     }
 
     // Select auditor automatically
-    const reports = (await Promise.all(
-      Object.keys(auditors)
-        .map(async auditor => await auditors[auditor].check() && summarizeReport(auditor, await auditors[auditor]()))
-    )).filter(report => !!report) as Report[]
+    const reports = 
+      ((await Promise.all(
+        Object.keys(auditors)
+          .map(async auditor => await auditors[auditor].check() && summarizeReport(auditor, await auditors[auditor]()))
+      ))
+      .filter(report => !!report) as Report[])
+      // Filter for severity
+      .map(report => {
+        return report
+      })
 
     // Throw if no auditor has been found
     if (!reports.length) throw Error("No auditor found")

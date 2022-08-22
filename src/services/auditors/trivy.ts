@@ -6,7 +6,7 @@ import jsonata from "jsonata"
 import { byPriority, priority } from "../../utils/severity"
 import dayjs from "dayjs"
 import JSONStream from "JSONStream"
-import ora = require("ora")
+import ora from "ora"
 
 const interpret = async (vulnerabilities: any): Promise<Report> => {
   const interpreted = await Promise.all(

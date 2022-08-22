@@ -1,6 +1,8 @@
 {
   "ts-node": {
-    "files": true
+    "files": true,
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
   },
   "files": [
     "src/main.ts",
@@ -11,6 +13,6 @@
   "exclude": ["node_modules"],
   "compilerOptions": {
     "outDir": "dist",
-    "esModuleInterop": true
+    "module": "ES2022",
   }
 }
