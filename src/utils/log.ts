@@ -9,5 +9,9 @@ export const error = (data: any): void => {
 }
 
 export const log = (data: any): void => {
+  console.error(data)
+}
+
+export const out = (data: any): void => {
   console.log(data)
 }

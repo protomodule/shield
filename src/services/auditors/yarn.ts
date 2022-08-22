@@ -9,6 +9,8 @@ import { priority } from "../../utils/severity"
 import { exec, ExecResult, NORESULT } from "../../utils/exec"
 import ora from "ora"
 
+const WITHOUT_SEPARATOR = ""
+
 const interpretAudit = (stdout: string): Report => {
   return __.uniqBy(
       stdout.split("\n")
@@ -59,16 +61,16 @@ export const yarn = (cwd: string) => {
     try {
       const result = await exec("yarn", [ "audit", "--json" ], { cwd })
       spinner.succeed("  Audit successful")
-      return interpretAudit(result.stdout?.join() || NORESULT)
+      return interpretAudit(result.stdout?.join(WITHOUT_SEPARATOR) || NORESULT)
     }
     catch (err: any) {
       const error = err as ExecResult
       if (error.stderr?.length) {
         spinner.fail("  An error occured during audit")
-        throw new Error(error.stderr?.join())
+        throw new Error(error.stderr?.join(WITHOUT_SEPARATOR))
       }
       spinner.succeed("  Audit finished")
-      return interpretAudit(error.stdout?.join() || NORESULT)
+      return interpretAudit(error.stdout?.join(WITHOUT_SEPARATOR) || NORESULT)
     }
   }
 

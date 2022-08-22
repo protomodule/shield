@@ -7,6 +7,7 @@ import { exec, ExecResult, NORESULT } from "../../utils/exec"
 import jsonata from "jsonata"
 import { byPriority, priority } from "../../utils/severity"
 
+const WITHOUT_SEPARATOR = ""
 const installedVersion = async (cwd: string, packageName: string): Promise<string | undefined> => {
   try {
     const filehandle = await fs.open(`${path.join(cwd, "package-lock.json")}`)
@@ -61,16 +62,16 @@ export const npm = (cwd: string) => {
     try {
       const result = await exec("npm", [ "audit", "--json" ], { cwd })
       spinner.succeed("  Audit successful")
-      return interpretAudit(result.stdout?.join() || NORESULT, cwd)
+      return interpretAudit(result.stdout?.join(WITHOUT_SEPARATOR) || NORESULT, cwd)
     }
     catch (err: any) {
       const error = err as ExecResult
       if (error.stderr?.length) {
         spinner.fail("  An error occured during audit")
-        throw new Error(error.stderr?.join())
+        throw new Error(error.stderr?.join(WITHOUT_SEPARATOR))
       }
       spinner.succeed("  Audit finished")
-      return interpretAudit(error.stdout?.join() || NORESULT, cwd)
+      return interpretAudit(error.stdout?.join(WITHOUT_SEPARATOR) || NORESULT, cwd)
     }
   }
 

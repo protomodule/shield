@@ -1,11 +1,11 @@
 import { Report } from "../report"
 import Table from "cli-table"
-import { log } from "../../utils/log"
+import { out } from "../../utils/log"
 import { icon } from "../../utils/severity"
 
 export const table = async (report: Report) => {
   if (!report.vulnerabilities.length) {
-    log("No vulnerabilities found")
+    out("No vulnerabilities found\n\n")
     return
   }
 
@@ -24,5 +24,6 @@ export const table = async (report: Report) => {
     vulnerability.identifier
   ]))
 
-  log(printTable.toString())
+  out(printTable.toString())
+  out("\n\n")
 }

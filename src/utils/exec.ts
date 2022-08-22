@@ -1,8 +1,6 @@
 import { spawn } from "child_process"
 import { Readable } from "stream"
 
-// export const exec = util.promisify(require("child_process").exec)
-
 export const NORESULT = "{}"
 
 export type ExecResult = {

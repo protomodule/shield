@@ -8,8 +8,8 @@ import { scan } from "./commands/scan"
 import { log } from "./utils/log"
 import { version } from "./utils/version"
 
-process.stdout.write(Buffer.from(`\n\n< / >            ${chalk.blue.bold("P R O T O S H I E L D")}           v${await version()}\n`));
-process.stdout.write(Buffer.from(`         https://github.com/protomodule/shield\n\n\n`));
+process.stderr.write(Buffer.from(`\n\n< / >            ${chalk.blue.bold("P R O T O S H I E L D")}           v${await version()}\n`));
+process.stderr.write(Buffer.from(`         https://github.com/protomodule/shield\n\n\n`));
 
 program.version(process.env.npm_package_version || "unknown")
 process.on('uncaughtException', err => {

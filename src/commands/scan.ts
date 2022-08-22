@@ -7,6 +7,7 @@ import { trivy } from "../services/auditors/trivy"
 import { table } from "../services/printers/table"
 import { exitCode } from "../services/report"
 import { filterSeverity } from "../utils/severity"
+import chalk from "chalk"
 
 export const scan = (program: Command) => {
   program
@@ -22,7 +23,7 @@ export const scan = (program: Command) => {
       const reports = filterSeverity(await exec(args.auditor), args.severity)
 
       reports.forEach(report => {
-        log(__.capitalize(report.auditor))
+        log(chalk.bgBlue.white.bold(`   ${__.capitalize(report.auditor)}   `))
         table(report)
       })
 
