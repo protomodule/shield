@@ -21,10 +21,18 @@
   "bin": {
     "protoshield": "./dist/main.js"
   },
+  "files": [
+    "LICENSE",
+    "package.json",
+    "dist/"
+  ],
   "scripts": {
     "shield": "./node_modules/.bin/ts-node ./src/main.ts",
     "watch": "./node_modules/.bin/nodemon ./src/main.ts",
-    "build": "npx tsc -p tsconfig.json"
+    "build": "npx tsc -p tsconfig.json",
+    "test": "echo \"🟡 No test specified\" && exit 0",
+    "release": "npx np",
+    "prepublishOnly": "yarn build"
   },
   "author": "Lukas Korl <hello@lukaskorl.com> (https://lukaskorl.com/)",
   "license": "Apache-2.0",
