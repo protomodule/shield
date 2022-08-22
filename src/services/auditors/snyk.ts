@@ -1,5 +1,3 @@
-import fs from "fs/promises"
-import path from "path"
 import { Report, report, Vulnerability } from "../report"
 import { Auditor } from "./auditor"
 import { ExecResult, exec, NORESULT } from "../../utils/exec"

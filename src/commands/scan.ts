@@ -1,6 +1,6 @@
 import __ from "lodash"
 import { Command } from "commander"
-import { log, debug } from "../utils/log"
+import { log } from "../utils/log"
 import { executor } from "../services/executor"
 import { snyk } from "../services/auditors/snyk"
 import { trivy } from "../services/auditors/trivy"

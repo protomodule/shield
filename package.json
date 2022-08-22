@@ -41,6 +41,7 @@
     "cli-table": "^0.3.11",
     "commander": "^9.4.0",
     "dayjs": "^1.11.5",
+    "find-up": "^6.3.0",
     "jsonata": "^1.8.6",
     "lodash": "^4.17.21",
     "nodemon": "^2.0.19",

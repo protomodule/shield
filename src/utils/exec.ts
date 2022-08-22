@@ -1,6 +1,4 @@
-import util from "util"
-import { debug } from "./log"
-import { exec as execCallback, spawn } from "child_process"
+import { spawn } from "child_process"
 import { Readable } from "stream"
 
 // export const exec = util.promisify(require("child_process").exec)

@@ -4,7 +4,6 @@ import ora from "ora"
 import { Report, report, Vulnerability } from "../report"
 import { Auditor } from "./auditor"
 import { exec, ExecResult, NORESULT } from "../../utils/exec"
-import { debug, log } from "../../utils/log"
 import jsonata from "jsonata"
 import { byPriority, priority } from "../../utils/severity"
 

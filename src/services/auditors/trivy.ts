@@ -1,7 +1,6 @@
 import { Report, report, Vulnerability } from "../report"
 import { Auditor } from "./auditor"
 import { stream } from "../../utils/exec"
-import { debug } from "../../utils/log"
 import jsonata from "jsonata"
 import { byPriority, priority } from "../../utils/severity"
 import dayjs from "dayjs"
