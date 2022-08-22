@@ -1,3 +1,7 @@
+import chalk from "chalk"
+import { Report } from "../services/report"
+import { log } from "./log"
+
 export const icon = (severity: string): string => {
   switch (severity) {
     case "info":     return "🔵"
@@ -24,4 +28,16 @@ export const priority = (severity: string): number => {
 
 export const byPriority = function(a: { priority: number }, b: { priority: number }) {
   return (a.priority > b.priority) ? -1 : (a.priority < b.priority) ? 1 : 0
+}
+
+export const filterSeverity = (reports: Report[], severity?: string) => {
+  severity && log(`🚦  Filter vulnerabilities for ${chalk.red.bold(severity)} or higher`)
+  return reports.map(report => {
+    return {
+      ...report,
+      vulnerabilities: report
+        .vulnerabilities
+        .filter(vulnerability => !severity || priority(vulnerability.severity) >= priority(severity))
+    }
+  })
 }
