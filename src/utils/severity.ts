@@ -14,6 +14,18 @@ export const icon = (severity: string): string => {
   }
 }
 
+export const color = (severity: string): string => {
+  switch (severity) {
+    case "info":     return "#0171BA"
+    case "low":      return "#3FAE49"
+    case "moderate": return "#FDC431"
+    case "medium":   return "#FDC431"
+    case "high":     return "#EE9335"
+    case "critical": return "#D53E3A"
+    default:         return "#7A7A78"
+  }
+}
+
 export const priority = (severity: string): number => {
   switch (severity) {
     case "info":     return 10

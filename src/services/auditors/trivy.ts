@@ -7,7 +7,7 @@ import dayjs from "dayjs"
 import JSONStream from "JSONStream"
 import ora from "ora"
 
-const interpret = async (vulnerabilities: any): Promise<Report> => {
+const interpret = async (vulnerabilities: any, image: string): Promise<Report> => {
   const interpreted = await Promise.all(
     vulnerabilities
       .map((vulnerability: any) => ({
@@ -37,6 +37,8 @@ const interpret = async (vulnerabilities: any): Promise<Report> => {
   const template = report()
   return {
     ...template,
+    name: image,
+    path: image,
     vulnerabilities: [
       ...template.vulnerabilities,
       ...interpreted
@@ -58,7 +60,7 @@ export const trivy = (image: string) => {
       })
 
       spinner.succeed("  Audit successful")
-      return interpret(vulnerabilities)
+      return interpret(vulnerabilities, image)
     }
     catch (err) {
       spinner.fail("  An error occured during audit")

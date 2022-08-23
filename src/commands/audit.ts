@@ -16,7 +16,7 @@ export const audit = (program: Command, print: GenericPrinter) => {
     .option("-a, --auditor <name of auditor> ")
     .option("-e, --exit", "End process with exit matching highest detected severity")
     .option("-s, --severity <severity>", "Specify minimum severity to include in report")
-    .option("-o, --output <format>", "Specify format of output (table, json is supported)")
+    .option("-o, --output <format>", "Specify format of output (table, json, html is supported)")
     .action(async (args) => {
       const exec = executor(args.path)
       exec.register(yarn)

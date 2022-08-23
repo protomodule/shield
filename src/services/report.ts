@@ -29,6 +29,8 @@ export interface Vulnerability {
 }
 
 export interface Report {
+  name: string
+  path: string
   auditor: string
   vulnerabilities: Vulnerability[]
   summary: Summary
@@ -51,6 +53,8 @@ export const summary = (summary?: Summary): Summary => {
 
 export const report = (report?: Report): Report => {
   return {
+    name: "none",
+    path: "none",
     auditor: "none",
     vulnerabilities: [],
     summary: summary(report?.summary)

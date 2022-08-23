@@ -24,7 +24,8 @@
   "files": [
     "LICENSE",
     "package.json",
-    "dist/"
+    "dist/",
+    "resources/"
   ],
   "scripts": {
     "shield": "./node_modules/.bin/ts-node ./src/main.ts",
@@ -42,6 +43,7 @@
   },
   "devDependencies": {
     "@types/cli-table": "^0.3.0",
+    "@types/ejs": "^3.1.1",
     "@types/lodash": "^4.14.184",
     "@types/node": "^18.7.9",
     "tsc": "^2.0.4"
@@ -53,6 +55,7 @@
     "cli-table": "^0.3.11",
     "commander": "^9.4.0",
     "dayjs": "^1.11.5",
+    "ejs": "^3.1.8",
     "find-up": "^6.3.0",
     "jsonata": "^1.8.6",
     "lodash": "^4.17.21",

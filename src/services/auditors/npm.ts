@@ -1,5 +1,5 @@
 import fs from "fs/promises"
-import path from "path"
+import path, { basename } from "path"
 import ora from "ora"
 import { Report, report, Vulnerability } from "../report"
 import { Auditor } from "./auditor"
@@ -49,6 +49,8 @@ const interpretAudit = async (stdout: string, cwd: string): Promise<Report> => {
   const template = report()
   return {
     ...template,
+    name: basename(path.resolve(cwd)),
+    path: cwd,
     vulnerabilities: [
       ...template.vulnerabilities,
       ...vulnerabilities

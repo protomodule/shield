@@ -6,7 +6,7 @@ import jsonata from "jsonata"
 import { byPriority, priority } from "../../utils/severity"
 import dayjs from "dayjs"
 
-const interpretAudit = async (stdout: string): Promise<Report> => {
+const interpretAudit = async (stdout: string, image: string): Promise<Report> => {
   
   log(stdout)
   debug(stdout.length)
@@ -45,6 +45,8 @@ const interpretAudit = async (stdout: string): Promise<Report> => {
   const template = report()
   return {
     ...template,
+    name: image,
+    path: image,
     vulnerabilities: [
       ...template.vulnerabilities,
       ...vulnerabilities
@@ -56,12 +58,12 @@ export const snyk = (image: string) => {
   const auditor = <Auditor> async function () {
     try {
       const result = await exec("docker", ["scan", "--json", "--group-issues",  `${image}`])
-      return interpretAudit(result.stdout?.join() || NORESULT)
+      return interpretAudit(result.stdout?.join() || NORESULT, image)
     }
     catch (err) {
       const error = err as ExecResult
       if (error.stderr?.length) throw new Error(error.stderr?.join())
-      return interpretAudit(error.stderr?.join() || NORESULT)
+      return interpretAudit(error.stderr?.join() || NORESULT, image)
     }
   }
 

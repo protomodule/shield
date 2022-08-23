@@ -4,14 +4,14 @@ import { Auditor } from "./auditor"
 import { Report, report } from "../report"
 import jsonata from "jsonata"
 import dayjs from "dayjs"
-import path from "path"
+import path, { basename } from "path"
 import { priority } from "../../utils/severity"
 import { exec, ExecResult, NORESULT } from "../../utils/exec"
 import ora from "ora"
 
 const WITHOUT_SEPARATOR = ""
 
-const interpretAudit = (stdout: string): Report => {
+const interpretAudit = (stdout: string, cwd: string): Report => {
   return __.uniqBy(
       stdout.split("\n")
         .filter(line => `${line}`.length)
@@ -52,7 +52,7 @@ const interpretAudit = (stdout: string): Report => {
         default:
           return acc
       }
-    }, report())
+    }, { ...report(), name: basename(path.resolve(cwd)), path: cwd })
 }
 
 export const yarn = (cwd: string) => {
@@ -61,7 +61,7 @@ export const yarn = (cwd: string) => {
     try {
       const result = await exec("yarn", [ "audit", "--json" ], { cwd })
       spinner.succeed("  Audit successful")
-      return interpretAudit(result.stdout?.join(WITHOUT_SEPARATOR) || NORESULT)
+      return interpretAudit(result.stdout?.join(WITHOUT_SEPARATOR) || NORESULT, cwd)
     }
     catch (err: any) {
       const error = err as ExecResult
@@ -70,7 +70,7 @@ export const yarn = (cwd: string) => {
         throw new Error(error.stderr?.join(WITHOUT_SEPARATOR))
       }
       spinner.succeed("  Audit finished")
-      return interpretAudit(error.stdout?.join(WITHOUT_SEPARATOR) || NORESULT)
+      return interpretAudit(error.stdout?.join(WITHOUT_SEPARATOR) || NORESULT, cwd)
     }
   }
 
