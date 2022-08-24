@@ -1,6 +1,7 @@
 import ejs from "ejs"
 import path from "path"
 import fs from "fs/promises"
+import __ from "lodash"
 import { Report, Vulnerability } from "../report"
 import { out } from "../../utils/log"
 import { color, icon } from "../../utils/severity"
@@ -14,7 +15,7 @@ export const html = <Printer> async function (report: Report): Promise<void> {
     createdAt: dayjs().format("DD.MM.YYYY"),
     severities: report.vulnerabilities.reduce((acc, vulnerability) => {
       if (!acc[vulnerability.severity]) acc[vulnerability.severity] = {
-        title: vulnerability.severity,
+        title: __.capitalize(vulnerability.severity),
         color: color(vulnerability.severity),
         icon: icon(vulnerability.severity),
         vulnerabilities: []
