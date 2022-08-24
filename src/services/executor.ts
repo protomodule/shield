@@ -36,26 +36,18 @@ export const executor = (path: string = cwd()) => {
     // Use auditor given as CLI argument
     if (auditor && auditors[auditor]) {
       log(`📌  Auditor has been pinned to ${auditor}`)
-      return [
-        summarizeReport(auditor, await auditors[auditor]())
-      ]
+      return [summarizeReport(auditor, await auditors[auditor]())]
     }
 
     // Select auditor automatically
-    const reports = 
-      ((await Promise.all(
-        Object.keys(auditors)
-          .map(async auditor => await auditors[auditor].check() && summarizeReport(auditor, await auditors[auditor]()))
-      ))
-      .filter(report => !!report) as Report[])
-      // Filter for severity
-      .map(report => {
-        return report
-      })
+    for (auditor in auditors) {
+      if (await auditors[auditor].check()) {
+        return [summarizeReport(auditor, await auditors[auditor]())]
+      }
+    }
 
     // Throw if no auditor has been found
-    if (!reports.length) throw Error("No auditor found")
-    return reports
+    throw Error("No auditor found")
   }
 
   executor.register = function (initializer: AuditorInitializer) {
