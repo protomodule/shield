@@ -1,5 +1,6 @@
 import { log } from "../../utils/log"
 import { Report } from "../report"
+import { summary } from "./summary"
 
 export interface Printer {
   (report: Report): Promise<void>
@@ -17,6 +18,11 @@ export const printer = () => {
   var printers: { [key: string]: Printer } = {}
 
   const printer = <GenericPrinter> async function (report: Report, printer?: string): Promise<void> {
+    // Always print summary
+    if (printer !== summary.identifier) {
+      await summary(report)
+    }
+
     // Use printer given as CLI argument
     if (printer && printers[printer]) {
       log(`📌  Printer has been pinned to ${printer}`)

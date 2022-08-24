@@ -11,6 +11,7 @@ import { printer } from "./services/printers/printer"
 import { log } from "./utils/log"
 import { version } from "./utils/version"
 import { html } from "./services/printers/html"
+import { summary } from "./services/printers/summary"
 
 process.stderr.write(Buffer.from(`\n\n< / >            ${chalk.blue.bold("P R O T O S H I E L D")}           v${await version()}\n`));
 process.stderr.write(Buffer.from(`         https://github.com/protomodule/shield\n\n\n`));
@@ -19,6 +20,7 @@ const print = printer()
 print.register(table)
 print.register(json)
 print.register(html)
+print.register(summary)
 
 program.version(process.env.npm_package_version || "unknown")
 process.on('uncaughtException', err => {
